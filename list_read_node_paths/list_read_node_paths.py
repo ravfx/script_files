@@ -4,8 +4,16 @@ from PySide2 import QtWidgets
 def list_read_node_paths():
     # Readノードを取得
     read_nodes = [node for node in nuke.allNodes() if node.Class() == "Read"]
+
+    # Readノードがない場合の処理
     if not read_nodes:
-        nuke.message("No Read nodes found in the script.")
+        # QMessageBoxを使用してエラーを表示
+        msg_box = QtWidgets.QMessageBox()
+        msg_box.setIcon(QtWidgets.QMessageBox.Warning)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText("No Read nodes found in the script.")
+        msg_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg_box.exec_()
         return
 
     # ファイルパスを取得
@@ -55,5 +63,6 @@ def list_read_node_paths():
     
     dialog.exec_()
 
-# 実行
-list_read_node_paths()
+# 実行を制御（Nuke起動時には実行されないようにする）
+if __name__ == "__main__":
+    list_read_node_paths()
